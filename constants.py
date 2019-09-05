@@ -1,0 +1,9 @@
+UPLOADER_FOLDER = "static/images/"
+ALLOWED_EXTENSION = ['.png', '.gif', '.jpg']
+WIDTH = 320
+HEIGHT = 320
+DB_HOST = 'localhost'
+DB_PORT = 27017
+DB_NAME = 'jampp'
+COLLECTION_ITEMS = 'items'
+TIME_TO_PERSIST_CACHE = 10

@@ -1,0 +1,203 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="static/styles.css">
+    </head>
+    <body>
+        <div id='alert-div'>
+        </div>
+        <div id="counter">
+            Count: <span>{{ items|length }} </span>
+        </div>
+        <div class="container">
+            <div class="row p-5">
+                <h1 class="text-center mx-auto">Single Page Aplication</h1>
+            </div>
+            <hr>
+            <div class="row p-5">
+                <div class="col-md-4" style="border-right: 1px solid rgba(0,0,0,.1)">
+                    <form id="form" enctype="multipart/form-data">
+                        <input type="number" name="index" id="index" style="display: none">
+                        <div class="form-group">
+                            <label for="image-upload">Upload image</label>
+                            <input type="file" class="form-control-file" name="image-upload" id="image-upload" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea type="text" class="form-control" name="description" id="description" maxlength='300' aria-describedby="description-helper" placeholder="Please, enter a description." required ></textarea>
+                            <small id="description-helper" class="form-text text-muted">0/300</small>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <div class="col-md-8">
+                    <h4 class="mx-auto text-uppercase text-center">List of images</h4>
+                    <table id="table" class="table mt-3">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Description</th>
+                            <th scope="col"> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                                <tr data-id="{{ item.id }}" class="table-row" draggable=true>
+                                    <th scope="row" class="index">{{ loop.index }}</th>
+                                    <td><img src="{{ item.file_path }}" alt="" draggable="false"></td>
+                                    <td class="description">{{ item.description }}</td>
+                                    <td> 
+                                        <ul class="item-ul">
+                                            <li class="pr-1"><i data-toggle="modal" data-target="#edit-modal" class="far fa-edit item-editar"></i></li>
+                                            <li><i class="far fa-trash-alt item-borrar"></i></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="modal-label">Editar Imagen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-edit" enctype="multipart/form-data">
+                        <input type="number" name='id-edit' id="id-edit" style="display: none">
+                        <div class="form-group">
+                            <label for="image-upload-edit">Upload image</label>
+                            <input type="file" class="form-control-file" name="image-upload-edit" id="image-upload-edit">
+                        </div>
+                        <div class="form-group">
+                            <label for="description-edit">Description</label>
+                            <textarea type="text" class="form-control" name="description-edit" id="description-edit" maxlength='300' aria-describedby="description-helper" placeholder="Please, enter a description." required ></textarea>
+                            <small id="description-helper-edit" class="form-text text-muted">0/300</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+        <script src="static/jquery-3.4.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+        <script src="static/functions.js"></script>
+        <script>
+            function change_indexes(){
+                var trs = $('tbody tr')
+                var json = []
+                var id
+                for (i = 0; i < trs.length; i++ ){
+                    id = $(trs[i]).attr('data-id')
+                    $(trs[i]).children('th').text(i+1)
+                    json.push({'id': id, 'index': i+1})
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url_for('edit_indexes') }}",
+                    contentType: 'application/json',
+                    data: JSON.stringify(json), 
+                    success:function(data){
+                        console.log(data)
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            }
+            $(document).on('click', '.item-borrar', function(){
+                var tr = $(this).closest('tr')
+                id_remove = tr.attr('data-id');
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url_for('delete_image') }}",
+                    data: {"id" : id_remove}, 
+                    success: onPostSuccessDelete,
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            })
+
+            $(document).ready(function() {
+
+                var socket = io.connect('http://' + document.domain + ':' + location.port + '/app');
+      
+                socket.on('add_item', function(json) {   
+                    add_item_row(JSON.parse(json), true)
+                    $("#counter span").text($('#table tbody tr').length)
+                });
+
+                socket.on('delete_item', function(data) {   
+                    delete_item_row(data)
+                });
+
+                socket.on('edit_item', function(data) {
+                    edit_item_row(JSON.parse(data))   
+                });
+
+                socket.on('edit_item_index', function(data) {
+                    data = JSON.parse(data)
+                    data = data['data']
+                    $('#table tbody tr').remove()
+                    for (i = 0; i<data.length; i++)
+                        add_item_row(data[i], false)
+                    $("#counter span").text($('#table tbody tr').length)
+                });
+
+
+
+                $("#form").submit(function(e) {
+                    e.preventDefault();
+                    $("#index").val($('tbody tr').length+1)
+                    var form = document.getElementById('form')
+                    var formData = new FormData(form)
+                    var url = "{{ url_for('add_image') }}"
+
+                    ajax_call(url, formData, onPostSuccessInsert)
+
+                });
+                
+                $("#form-edit").submit(function(e) {
+                    e.preventDefault();
+
+                    var form = document.getElementById('form-edit')
+                    var formData = new FormData(form)
+                    var url = "{{ url_for('edit_image') }}"
+
+                    ajax_call(url, formData, onPostSuccessEdit)
+
+                });
+
+                make_dragables()
+            });
+
+        function ajax_call(url, formData, func){
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: func,
+                error: function(data){}
+            })
+        }
+
+        </script>
+    </body>
+</html>

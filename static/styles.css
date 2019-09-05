@@ -1,0 +1,30 @@
+.text-red{
+    color: red!important
+}
+[draggable] {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    /* Required to make elements draggable in old WebKit */
+    -khtml-user-drag: element;
+    -webkit-user-drag: element;
+  }
+
+.table-row.border-top{
+    border-top: 5px solid black !important
+}
+#alert-div{
+    position: fixed;
+    right: 0;
+}
+.item-ul li{
+    cursor: pointer;
+    display: inline-block;
+}
+#counter{
+    position: fixed;
+    left: 0;
+    padding: 1em 2em;
+    border: 1px solid rgb(145, 144, 144)
+}
