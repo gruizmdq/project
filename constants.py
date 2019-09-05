@@ -4,6 +4,6 @@ WIDTH = 320
 HEIGHT = 320
 DB_HOST = 'localhost'
 DB_PORT = 27017
-DB_NAME = 'jampp'
+DB_NAME = 'new_db'
 COLLECTION_ITEMS = 'items'
 TIME_TO_PERSIST_CACHE = 10
