@@ -63,7 +63,7 @@ def edit_image():
         if not item is None:
             
             file_path = -1
-            #file sended.        
+            #file sent.        
             if 'image-upload-edit' in request.files and request.files['image-upload-edit'].filename != '' and app.config['UPLOAD_FOLDER'] + request.files['image-upload-edit'].filename != item.file_path:
                 print()
                 image = request.files['image-upload-edit']
@@ -88,7 +88,7 @@ def add_image():
 
     if request.method == 'POST':
 
-        #Not file sended.
+        #Not file sent.
         if 'image-upload' not in request.files:
             return Response('0', status=200)
 
