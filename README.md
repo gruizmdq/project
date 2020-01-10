@@ -1,6 +1,11 @@
 # Single Page Aplication
 
-This is an aplication that displays a list of images with their description. It implements some features like drag and drop 
+This is an aplication that displays a list of images with their description. It implements some features like drag and drop.
+
+# Challenge
+"CANNOT use a JavaScript Framework like angularjs, react, riot, vue.js, etc."
+
+
 
 ## Getting Started
 
